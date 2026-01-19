@@ -18,6 +18,15 @@ EXTERNAL_LINK_OVERRIDES = {
     "previous research exploring volunteers at school": "https://communityresearch.org.nz/research/volunteers-enriching-education-in-aotearoa-new-zealand/",
 }
 
+DOWNLOAD_FILE_OVERRIDES = {
+    "consent-to-interview-staff": "concenttointerviewstaff.pdf",
+    "consent-to-interview-parents-caregivers": "concenttointerviewparents.pdf",
+    "information-sheet-for-staff": "informationsheetforstaff.pdf",
+    "information-sheet-for-parents": "informationsheetforparents.pdf",
+    "researcher-at-school": "researcheratschool.pdf",
+    "researcher-at-school-poster": "researcheratschoolposter.pdf",
+}
+
 
 def slugify(value):
     value = value.strip().lower()
@@ -199,12 +208,20 @@ def build_downloads():
         slug = row.get("Slug", "").strip() or slugify(title)
         description = (row.get("Download description") or "").strip()
         url = (row.get("Downloadable content") or "").strip()
+        download_attr = ""
+        file_override = DOWNLOAD_FILE_OVERRIDES.get(slug)
+        if file_override:
+            local_path = BASE_DIR / "downloads" / file_override
+            if local_path.exists():
+                url = f"downloads/{file_override}"
+                download_attr = "download"
         downloads.append(
             {
                 "title": title,
                 "slug": slug,
                 "description": description,
                 "url": url,
+                "download_attr": download_attr,
             }
         )
     return downloads
@@ -267,6 +284,7 @@ def render_download_pages(downloads):
         page = page.replace("{{title}}", html.escape(item["title"]))
         page = page.replace("{{description}}", html.escape(item["description"]))
         page = page.replace("{{download_url}}", html.escape(item["url"]))
+        page = page.replace("{{download_attr}}", item["download_attr"])
         output_path = BASE_DIR / f"participation-download-{item['slug']}.html"
         output_path.write_text(page, encoding="utf-8")
 
@@ -278,12 +296,13 @@ def update_get_involved(downloads):
     for item in downloads:
         title = html.escape(item["title"])
         description = html.escape(item["description"])
-        url = f"participation-download-{item['slug']}.html"
+        url = item["url"]
+        download_attr = f' {item["download_attr"]}' if item["download_attr"] else ""
         items.append(
             "\n".join(
                 [
                     '<div role="listitem" class="w-dyn-item">',
-                    f'  <a href="{url}" class="link-block w-inline-block">',
+                    f'  <a href="{url}" class="link-block w-inline-block"{download_attr}>',
                     '    <div class="card card-dark---square-bottom-left-corner icon-bottom">',
                     '      <div class="inner-container _188px">',
                     f'        <h3 class="display-4 color-neutral-100 mg-bottom-16px">{title}</h3>',
