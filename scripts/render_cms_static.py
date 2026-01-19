@@ -105,7 +105,38 @@ def replace_list_container(text, class_value, new_inner, occurrence=1):
 
 
 def strip_empty_states(text):
-    return re.sub(r'<div class="[^"]*w-dyn-empty"[^>]*>.*?</div>', "", text, flags=re.DOTALL)
+    pattern = re.compile(
+        r'<div[^>]*class="[^"]*w-dyn-empty[^"]*"[^>]*>',
+        re.IGNORECASE,
+    )
+    div_tag = re.compile(r"</?div\b", re.IGNORECASE)
+    output = []
+    pos = 0
+
+    while True:
+        match = pattern.search(text, pos)
+        if not match:
+            output.append(text[pos:])
+            break
+        start = match.start()
+        output.append(text[pos:start])
+
+        count = 0
+        scan = start
+        while True:
+            next_tag = div_tag.search(text, scan)
+            if not next_tag:
+                pos = start
+                break
+            if text[next_tag.start() + 1] != "/":
+                count += 1
+            else:
+                count -= 1
+            scan = next_tag.end()
+            if count == 0:
+                pos = text.find(">", next_tag.start()) + 1
+                break
+    return "".join(output)
 
 
 def read_csv(path):
@@ -266,6 +297,12 @@ def update_get_involved(downloads):
 def update_updates(posts):
     path = BASE_DIR / "updates.html"
     html_text = path.read_text(encoding="utf-8")
+    if "updates-featured-grid" not in html_text:
+        html_text = html_text.replace(
+            "grid-2-columns _1-col-tablet gap-row-80px",
+            "grid-2-columns _1-col-tablet gap-row-80px updates-featured-grid",
+            1,
+        )
     sorted_posts = sorted(posts, key=lambda p: p["published"], reverse=True)
 
     featured = sorted_posts[:1]
