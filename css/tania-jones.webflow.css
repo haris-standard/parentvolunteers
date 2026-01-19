@@ -5544,3 +5544,13 @@ figcaption {
   font-style: normal;
   font-display: swap;
 }
+@media screen and (min-width: 992px) {
+  .updates-featured-grid {
+    grid-template-columns: 1.6fr 1fr;
+    align-items: start;
+  }
+
+  .updates-featured-primary .link---image-wrapper {
+    aspect-ratio: 4 / 3;
+  }
+}

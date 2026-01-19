@@ -268,8 +268,8 @@ def update_updates(posts):
     html_text = path.read_text(encoding="utf-8")
     sorted_posts = sorted(posts, key=lambda p: p["published"], reverse=True)
 
-    featured = sorted_posts[:2]
-    secondary = sorted_posts[2:4]
+    featured = sorted_posts[:1]
+    secondary = sorted_posts[1:3]
     all_posts = sorted_posts
 
     def featured_item(post):
@@ -279,7 +279,7 @@ def update_updates(posts):
         url = f"updates-{post['slug']}.html"
         return "\n".join(
             [
-                '<div role="listitem" class="w-dyn-item">',
+                '<div role="listitem" class="w-dyn-item updates-featured-primary">',
                 f'  <a href="{url}" class="blog-post-link-item w-inline-block">',
                 f'    <div class="link---image-wrapper mg-bottom-24px"><img src="{image}" loading="eager" alt="{title}" class="link---image"></div>',
                 f'    <h3 class="link-title-white---hover-secondary-6 heading-h2-size mg-bottom-16px">{title}</h3>',
