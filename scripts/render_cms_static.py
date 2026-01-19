@@ -14,8 +14,8 @@ DOWNLOAD_TEMPLATE = BASE_DIR / "templates" / "participation-download.html"
 EXTERNAL_LINK_OVERRIDES = {
     "about the research": "https://vimeo.com/807135567",
     "researcher at school quick info": "https://vimeo.com/791531490",
-    "previous research exploring volunteers in school": "https://vimeo.com/791531490",
-    "previous research exploring volunteers at school": "https://vimeo.com/791531490",
+    "previous research exploring volunteers in school": "https://communityresearch.org.nz/research/volunteers-enriching-education-in-aotearoa-new-zealand/",
+    "previous research exploring volunteers at school": "https://communityresearch.org.nz/research/volunteers-enriching-education-in-aotearoa-new-zealand/",
 }
 
 
