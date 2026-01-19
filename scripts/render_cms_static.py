@@ -11,6 +11,13 @@ DOWNLOADS_CSV = BASE_DIR / "Tania Jones - Participation Downloads.csv"
 BLOG_TEMPLATE = BASE_DIR / "detail_blog.html"
 DOWNLOAD_TEMPLATE = BASE_DIR / "templates" / "participation-download.html"
 
+EXTERNAL_LINK_OVERRIDES = {
+    "about the research": "https://vimeo.com/807135567",
+    "researcher at school quick info": "https://vimeo.com/791531490",
+    "previous research exploring volunteers in school": "https://vimeo.com/791531490",
+    "previous research exploring volunteers at school": "https://vimeo.com/791531490",
+}
+
 
 def slugify(value):
     value = value.strip().lower()
@@ -163,6 +170,9 @@ def build_blog_posts():
         published = parse_date(
             row.get("Published On") or row.get("Updated On") or row.get("Created On")
         )
+        override = EXTERNAL_LINK_OVERRIDES.get(title.lower())
+        link_url = override or f"updates-{slug}.html"
+        link_external = bool(override)
         posts.append(
             {
                 "title": title,
@@ -171,6 +181,8 @@ def build_blog_posts():
                 "image": image,
                 "external": external,
                 "published": published,
+                "link_url": link_url,
+                "link_external": link_external,
             }
         )
     return posts
@@ -313,11 +325,12 @@ def update_updates(posts):
         title = html.escape(post["title"])
         summary = html.escape(post["summary"])
         image = html.escape(post["image"])
-        url = f"updates-{post['slug']}.html"
+        url = html.escape(post["link_url"])
+        target = ' target="_blank" rel="noopener noreferrer"' if post["link_external"] else ""
         return "\n".join(
             [
                 '<div role="listitem" class="w-dyn-item updates-featured-primary">',
-                f'  <a href="{url}" class="blog-post-link-item w-inline-block">',
+                f'  <a href="{url}" class="blog-post-link-item w-inline-block"{target}>',
                 f'    <div class="link---image-wrapper mg-bottom-24px"><img src="{image}" loading="eager" alt="{title}" class="link---image"></div>',
                 f'    <h3 class="link-title-white---hover-secondary-6 heading-h2-size mg-bottom-16px">{title}</h3>',
                 f'    <p class="color-neutral-200 mg-bottom-0">{summary}</p>',
@@ -329,11 +342,12 @@ def update_updates(posts):
     def secondary_item(post):
         title = html.escape(post["title"])
         image = html.escape(post["image"])
-        url = f"updates-{post['slug']}.html"
+        url = html.escape(post["link_url"])
+        target = ' target="_blank" rel="noopener noreferrer"' if post["link_external"] else ""
         return "\n".join(
             [
                 '<div role="listitem" class="w-dyn-item">',
-                f'  <a href="{url}" class="blog-post-link-item small-image-left w-inline-block">',
+                f'  <a href="{url}" class="blog-post-link-item small-image-left w-inline-block"{target}>',
                 f'    <div class="link---image-wrapper"><img src="{image}" loading="eager" alt="{title}" class="link---image"></div>',
                 '    <div>',
                 f'      <h3 class="link-title-white---hover-accent mg-bottom-0">{title}</h3>',
@@ -347,11 +361,12 @@ def update_updates(posts):
         title = html.escape(post["title"])
         summary = html.escape(post["summary"])
         image = html.escape(post["image"])
-        url = f"updates-{post['slug']}.html"
+        url = html.escape(post["link_url"])
+        target = ' target="_blank" rel="noopener noreferrer"' if post["link_external"] else ""
         return "\n".join(
             [
                 '<div role="listitem" class="w-dyn-item">',
-                f'  <a href="{url}" class="blog-post-link-item w-inline-block">',
+                f'  <a href="{url}" class="blog-post-link-item w-inline-block"{target}>',
                 f'    <div class="link---image-wrapper mg-bottom-24px"><img src="{image}" loading="eager" alt="{title}" class="link---image"></div>',
                 f'    <h3 class="link-title---hover-accent mg-bottom-10px">{title}</h3>',
                 '    <div class="blog-post-details-container">',
