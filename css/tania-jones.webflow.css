@@ -5560,6 +5560,10 @@ figcaption {
 }
 
 @keyframes pv-fade-scale {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(0.92, 0.92, 1);
+  }
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
