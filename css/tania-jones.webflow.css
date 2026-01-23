@@ -5556,10 +5556,7 @@ figcaption {
 }
 
 .button-animate-in {
-  opacity: 0;
-  transform: translate3d(0, 0, 0) scale3d(0.92, 0.92, 1);
-  animation: pv-fade-scale 0.6s ease forwards;
-  animation-delay: 0.2s;
+  animation: pv-fade-scale 0.6s ease 0.2s backwards;
 }
 
 @keyframes pv-fade-scale {
